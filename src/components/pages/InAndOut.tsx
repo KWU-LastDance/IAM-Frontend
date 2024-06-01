@@ -8,6 +8,7 @@ import { Outgoing } from './Outgoing';
 
 const Container = styled.div`
     padding: 90px;
+    padding-top: 60px;
     margin-left: 160px;
     font-size: 20px;
     `;
