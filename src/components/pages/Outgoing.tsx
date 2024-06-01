@@ -130,7 +130,7 @@ export function Outgoing() {
           );
     
 const clickIn = () => {
-            alert("입고되었습니다.")
+            alert("출고되었습니다.")
         }
 
         const [products, setProducts] = useState([

@@ -75,7 +75,7 @@ export function Sidebar() {
         setIsInandout(false)
         setIsHistory(false)
         setIsDashboard(false)
-        //navigate('/monitoring')
+        navigate('/monitoring')
     }
 
     const handleDashboard = () => {
@@ -83,7 +83,7 @@ export function Sidebar() {
         setIsInandout(false)
         setIsHistory(false)
         setIsMonitoring(false)
-        //navigate('/dashboard')
+        navigate('/dashboard')
     }
 
     return (
