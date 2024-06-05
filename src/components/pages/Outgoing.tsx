@@ -128,7 +128,7 @@ export function Outgoing() {
             const [startDate, setStartDate] = useState(
                 setHours(setMinutes(new Date(),new Date().getMinutes()) ,new Date().getHours())
           );
-    
+
 const clickIn = () => {
             alert("출고되었습니다.")
         }
@@ -180,10 +180,6 @@ const clickIn = () => {
                 onChange={(date) => setStartDate(date)}
                 showTimeSelect
                 excludeTimes={[
-                  setHours(setMinutes(new Date(), 0), 17),
-                  setHours(setMinutes(new Date(), 30), 18),
-                  setHours(setMinutes(new Date(), 30), 19),
-                  setHours(setMinutes(new Date(), 30), 17),
                 ]}
                 dateFormat="yyyy/MM/dd HH:mm"
                 maxDate={new Date()} />
@@ -232,7 +228,7 @@ const clickIn = () => {
                 <Div>
                 <Text>출고 제품</Text>
                 <Line />
-                <p style={{textAlign:"right", fontSize:"16px",paddingRight:"150px", marginBottom:"0"}}>입고 수량</p>
+                <p style={{textAlign:"right", fontSize:"16px",paddingRight:"150px", marginBottom:"0"}}>출고 수량</p>
                 <Items>
                     {inputs.map((input, index) => (
                         <Item key={index}>

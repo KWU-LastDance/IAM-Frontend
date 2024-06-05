@@ -44,7 +44,7 @@ const Body = styled.div`
     width: 700px;
     height: 200px;
     padding: 90px;
-    margin: 20px;
+    margin: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     font-size: 20px;
     background-color: #EDEFFE;
@@ -53,7 +53,8 @@ const Body = styled.div`
     const Text = styled.p`
     font-size: 20px;
     margin-top: 0;
-    margin-bottom: 60px;
+    margin-bottom: 45px;
+    line-height: 1.5;
     `;
     const Button = styled.button`
     background-color: #3737FF;
@@ -83,7 +84,7 @@ export function Home() {
 
     <Body>
     <Container>
-    <Text>IAM을 사용하여 쉽고 빠르게 재고 관리를 시작하세요. 제품마다 정해진 위치가 있는 경우 기본모드의 속성을 추가하여 제품별 위치를 기록해 둘수 있습니다. 입고, 출고, 조정, 이동은 재고 수량이 변경될때 사용됩니다.
+    <Text>IAM은 농산품의 입출고 관리, 품질별 분류 모니터링, 입출고 내역 조회, 그리고 종합 대시보드를 통해 농산품 유통 센터 운영을 최적화합니다. 제품을 품질별로 분류하는 과정을 실시간으로 모니터링하고, 정확한 재고 관리를 통해 효율적인 입출고를 지원합니다. 또한, 사용자가 필요한 정보를 한눈에 파악할 수 있도록 대시보드를 맞춤형으로 제공합니다. IAM과 함께 효율적이고 체계적인 재고 관리를 경험하세요.
     </Text>
     <Button onClick={()=>navigate('/in-and-out')}>시작하기</Button>
     </Container>

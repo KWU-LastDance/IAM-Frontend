@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { faBoxOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from 'styled-components';
-import { Sidebar } from '../Sidebar';
 import { Incoming } from './Incoming';
 import { Outgoing } from './Outgoing';
 
@@ -57,8 +56,6 @@ export function InAndOut() {
 
     return (
         <Container>
-            <Sidebar />
-
                 <ChooseDiv>
                     {isIn ? <IncomingText>입고</IncomingText> : <Text onClick={()=>isIncomimg()}>입고</Text>}
                     {isIn ? <Text onClick={()=>isOutgoing()}>출고</Text> : <OutgoingText>출고</OutgoingText>}

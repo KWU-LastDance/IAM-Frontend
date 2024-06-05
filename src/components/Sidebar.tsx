@@ -33,17 +33,23 @@ const Title = styled.h1`
     font-weight: 700;
     `;
 
-const Li = styled.li`
+    const Ul = styled.ul`
     list-style-type: none;
+    padding-left: 0;
+    `;
+
+const Li = styled.li`
     font-size: 19px;
     margin-top: 15px;
     padding-top: 10px;
     padding-left: 10px;
     cursor: pointer;
     color:#555555;
+    width: 60%;
     `;
 const ChoosedLi = styled(Li)`
     color: #3737FF;
+    
     `
 
 export function Sidebar() {
@@ -97,11 +103,12 @@ export function Sidebar() {
                     <Title>IAM</Title>
                 </TextDiv>
                 </LogoDiv>
-
+                <Ul>
                 {isInandout ? <ChoosedLi onClick={()=>handleInandout()}>입출고</ChoosedLi> : <Li onClick={()=>handleInandout()}>입출고</Li>}
                 {isHistory ? <ChoosedLi onClick={()=>handleHistory()}>히스토리</ChoosedLi> : <Li onClick={()=>handleHistory()}>히스토리</Li>}
                {isMonitoring ? <ChoosedLi onClick={()=>handleMonitoring()}>모니터링</ChoosedLi> : <Li onClick={()=>handleMonitoring()}>모니터링</Li>}
                 {isDashboard ? <ChoosedLi onClick={()=>handleDashboard()}>대시보드</ChoosedLi> : <Li onClick={()=>handleDashboard()}>대시보드</Li>}
+                </Ul>
             </Container>
         </>
     )

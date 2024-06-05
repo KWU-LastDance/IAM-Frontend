@@ -176,12 +176,6 @@ export function Incoming() {
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
                 showTimeSelect
-                excludeTimes={[
-                  setHours(setMinutes(new Date(), 0), 17),
-                  setHours(setMinutes(new Date(), 30), 18),
-                  setHours(setMinutes(new Date(), 30), 19),
-                  setHours(setMinutes(new Date(), 30), 17),
-                ]}
                 dateFormat="yyyy/MM/dd HH:mm"
                 maxDate={new Date()} />
 
