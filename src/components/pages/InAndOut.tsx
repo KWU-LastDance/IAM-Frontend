@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
-import { faBoxOpen } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from 'react'
 import styled from 'styled-components';
 import { Incoming } from './Incoming';
 import { Outgoing } from './Outgoing';
-import axios from 'axios';
+//import axios from 'axios';
 
 const Container = styled.div`
     padding: 90px;

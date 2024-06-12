@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import {Home} from './components/pages/Home'
 import {InAndOut} from './components/pages/InAndOut'

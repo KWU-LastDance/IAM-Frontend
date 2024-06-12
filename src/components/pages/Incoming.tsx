@@ -1,7 +1,5 @@
-import { useEffect, useState, useRef } from 'react'
-import {useNavigate} from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import axios from 'axios';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from "react-datepicker";

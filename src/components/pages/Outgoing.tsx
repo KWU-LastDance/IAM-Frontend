@@ -1,7 +1,5 @@
-import { useEffect, useState, useRef } from 'react'
-import {useNavigate} from 'react-router-dom'
-import axios from 'axios';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from 'react'
+//import axios from 'axios';
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from "react-datepicker";
@@ -142,11 +140,10 @@ const clickIn = () => {
             }
         ])
 
-        const [inputs, setInputs] = useState([
-        ])
+        const [inputs, setInputs] = useState<any[]>([])
 
         const [isOutgoing, setIsOutgoing] = useState(false)
-        const input = (index) => {
+        const input = (index : number) => {
             setIsOutgoing(true)
             const isExist = inputs.findIndex((input) => input.name === products[index].name)
             if(isExist === -1){
@@ -157,7 +154,7 @@ const clickIn = () => {
             }
         }
 
-        const onChange = (i) => {
+        const onChange = (i : number) => {
             if(event.target.value <= 0){
                 setInputs(inputs.map((input, index) => i === index ? {...input, cnt: 1} : input))
             }
@@ -169,7 +166,7 @@ const clickIn = () => {
         }
     }
 
-    const deleteBtn = (i) => {
+    const deleteBtn = (i : number) => {
         setInputs(inputs.filter((input, index) => i !== index))
     }
 
@@ -241,7 +238,7 @@ const clickIn = () => {
                 </Items>
                 </Div>
                 : null }
-                
+
                 </Container>
 
                 <Button onClick={()=>clickIn()}>

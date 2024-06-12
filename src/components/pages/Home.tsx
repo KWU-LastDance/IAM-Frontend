@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import {useNavigate} from 'react-router-dom'
 import { faBoxOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
