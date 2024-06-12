@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from "react-datepicker";
-import { set } from 'date-fns';
+import axios from 'axios';
 
 const Container = styled.div`
     display: flex;
@@ -79,6 +79,7 @@ const Text = styled.p`
     margin-left: 20px;
     width: 57%;
     height: 400px;
+    margin-top: -40px;
     `;
     const Line = styled.div`
     width: 100%;
@@ -116,22 +117,45 @@ const Text = styled.p`
     font-size: 17px;
     `
 export function History() {
-    const setHours = (date: Date, hour: number) => {
+    const getList = async()=> {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/transactions`)
+        .then((res) => {
+            console.log(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+    useEffect(() => {
+        getList()
+    }, [])
+
+
+      const adjustMinutes = (date: Date) => {
         const newDate = new Date(date);
-        newDate.setHours(hour);
+        const minutes = newDate.getMinutes();
+        const adjustedMinutes = minutes < 30 ? 0 : 30;
+        newDate.setMinutes(adjustedMinutes, 0, 0); // set seconds and milliseconds to zero
         return newDate;
-      }
-        const setMinutes = (date: Date, minutes: number) => {
+    }
+        const subtractMonths = (date: Date, months: number) => {
             const newDate = new Date(date);
-            newDate.setMinutes(minutes);
+            newDate.setMonth(newDate.getMonth() - months);
             return newDate;
         }
-            const [startDate, setStartDate] = useState(
-                setHours(setMinutes('2024-03-01', 0), 9)
-          );
+        
+        const adjustDateAndMinutes = (date: Date, months: number) => {
+            const newDate = subtractMonths(date, months);
+            return adjustMinutes(newDate);
+        }
+
+        const [startDate, setStartDate] = useState(
+            adjustDateAndMinutes(new Date(), 1)
+        );
           const [endDate, setEndDate] = useState(
-            setHours(setMinutes(new Date(),new Date().getMinutes()) ,new Date().getHours())
-          );
+            adjustMinutes(new Date())
+        );
+
 
         const [history, setHistory] = useState([
             {

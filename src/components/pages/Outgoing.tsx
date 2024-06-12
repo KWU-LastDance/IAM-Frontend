@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import {useNavigate} from 'react-router-dom'
-
+import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -115,19 +115,17 @@ const Input = styled.input`
         `;
 
 export function Outgoing() {
-    const setHours = (date: Date, hour: number) => {
+    const adjustMinutes = (date: Date) => {
         const newDate = new Date(date);
-        newDate.setHours(hour);
+        const minutes = newDate.getMinutes();
+        const adjustedMinutes = minutes < 30 ? 0 : 30;
+        newDate.setMinutes(adjustedMinutes, 0, 0); // set seconds and milliseconds to zero
         return newDate;
-      }
-        const setMinutes = (date: Date, minutes: number) => {
-            const newDate = new Date(date);
-            newDate.setMinutes(minutes);
-            return newDate;
-        }
-            const [startDate, setStartDate] = useState(
-                setHours(setMinutes(new Date(),new Date().getMinutes()) ,new Date().getHours())
-          );
+    }
+    
+    const [startDate, setStartDate] = useState(
+        adjustMinutes(new Date())
+    );
 
 const clickIn = () => {
             alert("출고되었습니다.")
@@ -147,7 +145,9 @@ const clickIn = () => {
         const [inputs, setInputs] = useState([
         ])
 
+        const [isOutgoing, setIsOutgoing] = useState(false)
         const input = (index) => {
+            setIsOutgoing(true)
             const isExist = inputs.findIndex((input) => input.name === products[index].name)
             if(isExist === -1){
                 setInputs([...inputs, {name: products[index].name, cnt: 1}])
@@ -225,6 +225,7 @@ const clickIn = () => {
                 </Items>
                 </Div>
 
+                {isOutgoing ?
                 <Div>
                 <Text>출고 제품</Text>
                 <Line />
@@ -239,6 +240,8 @@ const clickIn = () => {
                     ))}
                 </Items>
                 </Div>
+                : null }
+                
                 </Container>
 
                 <Button onClick={()=>clickIn()}>

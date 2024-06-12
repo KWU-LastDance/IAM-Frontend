@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
 import {useNavigate} from 'react-router-dom'
-
+import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from "react-datepicker";
-
 const Text = styled.p`
     font-size: 20px;
     margin-top: 0;
@@ -115,22 +114,21 @@ const Input = styled.input`
         `;
 
 export function Incoming() {
-      const setHours = (date: Date, hour: number) => {
+    const adjustMinutes = (date: Date) => {
         const newDate = new Date(date);
-        newDate.setHours(hour);
+        const minutes = newDate.getMinutes();
+        const adjustedMinutes = minutes < 30 ? 0 : 30;
+        newDate.setMinutes(adjustedMinutes, 0, 0); // set seconds and milliseconds to zero
         return newDate;
-      }
-        const setMinutes = (date: Date, minutes: number) => {
-            const newDate = new Date(date);
-            newDate.setMinutes(minutes);
-            return newDate;
-        }
-            const [startDate, setStartDate] = useState(
-                setHours(setMinutes(new Date(),new Date().getMinutes()) ,new Date().getHours())
-          );
+    }
     
+    const [startDate, setStartDate] = useState(
+        adjustMinutes(new Date())
+    );
+
         const clickIn = () => {
             alert("입고되었습니다.")
+            getList()
         }
 
         const [products, setProducts] = useState([
@@ -144,10 +142,25 @@ export function Incoming() {
             }
         ])
 
+        const getList = async()=> {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products`)
+            .then((res) => {
+                setProducts(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+        useEffect(() => {
+            getList()
+        }, [])
+
         const [inputs, setInputs] = useState([
         ])
 
+        const [isIncomimg, setIsIncomimg] = useState(false)
         const input = (index) => {
+            setIsIncomimg(true)
             const isExist = inputs.findIndex((input) => input.name === products[index].name)
             if(isExist === -1){
                 setInputs([...inputs, {name: products[index].name, cnt: 1}])
@@ -194,32 +207,11 @@ export function Incoming() {
                             <p>{product.quantity}</p>
                         </Item>
                     ))}
-                    <Item>
-                        <p>품목2</p>
-                        <p>수량</p>
-                    </Item>
-                    <Item>
-                        <p>품목3</p>
-                        <p>수량</p>
-                    </Item>
-                    <Item>
-                        <p>품목4</p>
-                        <p>수량</p>
-                    </Item>
-                    <Item>
-                        <p>품목5</p>
-                        <p>수량</p>
-                    </Item>
-                    <Item>
-                        <p>품목5</p>
-                        <p>수량</p>
-                    </Item>                    <Item>
-                        <p>품목5</p>
-                        <p>수량</p>
-                    </Item>
+
                 </Items>
                 </Div>
 
+                {isIncomimg ?
                 <Div>
                 <Text>입고 제품</Text>
                 <Line />
@@ -234,6 +226,7 @@ export function Incoming() {
                     ))}
                 </Items>
                 </Div>
+                : null }
                 </Container>
 
                 <Button onClick={()=>clickIn()}>
