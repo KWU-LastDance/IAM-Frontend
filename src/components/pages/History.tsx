@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from "react-datepicker";
 import axios from 'axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
     display: flex;
@@ -81,11 +83,7 @@ const Text = styled.p`
     height: 400px;
     margin-top: -40px;
     `;
-    const Line = styled.div`
-    width: 100%;
-    border: 1px solid #D3D3D3;
-    margin-bottom: 20px;
-    `;
+    
     const ListItems = styled.div`
     display: flex;
     flex-direction: column;
@@ -94,28 +92,44 @@ const Text = styled.p`
     width: 90%;
     `;
 
-    const ListItem = styled.div`
+    const RightItem = styled.div`
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #D3D3D3;
     padding: 0 30px;
     margin: 5px 20px;
-    justify-content: space-between;
     font-size: 17px;
-    cursor: pointer;
     align-items: center;
     position: relative;
+    justify-content: space-between;
     `;
 
+    const ListItem = styled(RightItem)`
+    cursor: pointer;
+    justify-content: space-between;
+    `;
+
+    const Stock = styled.div`
+    display: flex;
+    flex-direction: row;
+    `
+    const StockText = styled.p`
+    font-size: 17px;
+    margin-right: 15px;
+    margin-left: 15px;
+    `
     const SubTitle = styled.div`
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #D3D3D3;
     padding: 0 30px;
     margin: 5px 20px;
-    justify-content: space-between;
     font-size: 17px;
+    justify-content: space-between;
+    margin-right: 90px;
+    padding-right: 60px;
     `
+    
 export function History() {
     const getList = async()=> {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/transactions`)
@@ -156,26 +170,56 @@ export function History() {
             adjustMinutes(new Date())
         );
 
+        const getListByDate = async () => {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/transactions`, {
+                params: {
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
+                }
+            })
+            .then((res) => {
+                console.log(res.data)
+                setHistory(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+
+        useEffect(() => {
+            console.log(startDate, endDate)
+            getListByDate()
+        }, [startDate, endDate])
+
 
         const [history, setHistory] = useState([
             {
+                id: 1,
                 date: '2024-03-02 09:00',
-                inandout: '입고',
+                type: 'store',
                 item: '사과 - 상',
                 amount: '200',
-            },
-            {
-                date: '2024-03-01 09:30',
-                inandout: '출고',
-                item: '사과 - 상',
-                amount: '150',
             }
-        ])
-        const [showList, setShowList] = useState([]);
+        ]);
 
-        const show = (index: number) => {
+        const [showList, setShowList] = useState([]);
+        
+        const getHistory = async (id) => {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/transactions/${id}`)
+            .then((res) => {
+                console.log(res.data)
+                setShowList(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+
+        const select = (index: number) => {
             setShowList([]);
-            if(history[index].inandout === '입고') {
+            console.log(history[index])
+            getHistory(history[index].id)
+            if(history[index].type === 'store') {
                 setIsIn(true);
                 setIsOut(false);
                 setShowList([history[index]]);
@@ -212,12 +256,16 @@ export function History() {
                 <LeftDiv>
                     <ListItems>
                         {history.map((item, index) => (
-                            <ListItem key={index} onClick={()=>show(index)}>
-                                <p>{item.inandout}</p>
-                                <p>{item.date}</p>
+                            <ListItem key={index} onClick={()=>select(index)}>
+                                {item.type === 'store' ?
+                                    <p>입고</p>
+                                :
+                                    <p>출고</p>
+                                }
+                                <p>{item.timestamp}</p>
                                 <br />
-                                <p>{item.item}</p>
-                                <p>{item.amount}</p>
+                                <p>{item.quantity}품목</p>
+                                <p>{item.variation}</p>
                             </ListItem>
                         ))}
                     </ListItems>
@@ -227,17 +275,19 @@ export function History() {
                             <IncomingText>입고 내역</IncomingText>
                             <IncomingLine />
                             <SubTitle>
-                            <p>사진</p>
-                            <p>제품명</p>
-                            <p>재고 변동</p>
+                            <p>상품명</p>
+                            <p style={{marginLeft:"190px"}}>재고 변동</p>
                             </SubTitle>
                         <ListItems>
                             {showList.map((item, index) => (
-                                <ListItem key={index} onClick={()=>show(index)}>
-                                    <br />
-                                    <p>{item.item}</p>
-                                    <p>{item.amount}</p>
-                                </ListItem>
+                                <RightItem key={index}>
+                                    <p>{item.product_name}</p>
+                                    <Stock>
+                                    <StockText>{item.previous_stock}</StockText>
+                                    <p><FontAwesomeIcon icon={faArrowRight} style={{color: "#666666"}} /></p>
+                                    <StockText>{item.current_stock}</StockText>
+                                    </Stock>
+                                </RightItem>
                             ))}
                         </ListItems>
                         </>
@@ -248,21 +298,21 @@ export function History() {
                                     <OutgoingText>출고 내역</OutgoingText>
                                     <OutgoingLine />
                                     <SubTitle>
-                            <p>사진</p>
-                            <p>제품명</p>
+                                    <p>상품명</p>
                             <p>재고 변동</p>
                             </SubTitle>
-                                    <ListItems>
-                                        {showList.map((item, index) => (
-                                            <ListItem key={index}>
-                                                <p>{item.inandout}</p>
-                                                <p>{item.date}</p>
-                                                <br />
-                                                <p>{item.item}</p>
-                                                <p>{item.amount}</p>
-                                            </ListItem>
-                                    ))}
-                                    </ListItems>
+                            <ListItems>
+                            {showList.map((item, index) => (
+                                <RightItem key={index}>
+                                <p>{item.product_name}</p>
+                                <Stock>
+                                <StockText>{item.previous_stock}</StockText>
+                                <p><FontAwesomeIcon icon={faArrowRight} style={{color: "#666666"}} /></p>
+                                <StockText>{item.current_stock}</StockText>
+                                </Stock>
+                            </RightItem>
+                            ))}
+                        </ListItems>
                                 </>
                             )}
                         

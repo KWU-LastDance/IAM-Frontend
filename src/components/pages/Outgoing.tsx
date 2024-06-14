@@ -1,5 +1,5 @@
-import { useState } from 'react'
-//import axios from 'axios';
+import { useEffect, useState } from 'react'
+import axios from 'axios';
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from "react-datepicker";
@@ -126,26 +126,70 @@ export function Outgoing() {
     );
 
 const clickIn = () => {
+    setOutgoing()
+    console.log(inputs)
             alert("출고되었습니다.")
+            setInputs([])
+            getList()
+            console.log(products)
         }
 
-        const [products, setProducts] = useState([
-            {
-                name: '사과 - 상',
-                quantity: 250
-            },
-            {
-                name: '바나나 - 중',
-                quantity: 150
+        const setOutgoing = async () => {
+            const data = [
+                {
+                  "product_id": 7,
+                  "variation": 1
+                }
+              ];
+            if (data.some(item => item.product_id == null || item.variation == null)) {
+                console.error("Data contains null values:", data);
+                return;
             }
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/transactions/release`, data, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log(response);
+            } catch (err) {
+                if (err.response) {
+                    // 서버가 200대가 아닌 상태 코드로 응답한 경우
+                    console.log('Error response:', err.response.data);
+                } else if (err.request) {
+                    // 요청이 만들어졌으나 응답을 받지 못한 경우
+                    console.log('No response received:', err.request);
+                } else {
+                    // 다른 오류가 발생한 경우
+                    console.log('Error:', err.message);
+                }
+            }
+        };
+        
+
+        const [products, setProducts] = useState([
         ])
+
+        const getList = async()=> {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products`)
+            .then((res) => {
+                setProducts(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+        useEffect(() => {
+            getList()
+        }, [])
+
 
         const [inputs, setInputs] = useState<any[]>([])
 
         const [isOutgoing, setIsOutgoing] = useState(false)
         const input = (index : number) => {
             setIsOutgoing(true)
-            const isExist = inputs.findIndex((input) => input.name === products[index].name)
+            const isExist = inputs.findIndex((input) => input.id === products[index].id)
             if(isExist === -1){
                 setInputs([...inputs, {name: products[index].name, cnt: 1}])
             }
@@ -196,29 +240,6 @@ const clickIn = () => {
                             <p>{product.quantity}</p>
                         </Item>
                     ))}
-                    <Item>
-                        <p>품목2</p>
-                        <p>수량</p>
-                    </Item>
-                    <Item>
-                        <p>품목3</p>
-                        <p>수량</p>
-                    </Item>
-                    <Item>
-                        <p>품목4</p>
-                        <p>수량</p>
-                    </Item>
-                    <Item>
-                        <p>품목5</p>
-                        <p>수량</p>
-                    </Item>
-                    <Item>
-                        <p>품목5</p>
-                        <p>수량</p>
-                    </Item>                    <Item>
-                        <p>품목5</p>
-                        <p>수량</p>
-                    </Item>
                 </Items>
                 </Div>
 

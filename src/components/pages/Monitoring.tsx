@@ -22,17 +22,16 @@ const UnityDiv = styled.div`
 
 export function Monitoring() {
     const { unityProvider} = useUnityContext({
-        loaderUrl: "Build/유니티 빌드.loader.js",
-        dataUrl: "Build/유니티 빌드.data",
-        frameworkUrl: "Build/유니티 빌드.framework.js",
-        codeUrl: "Build/유니티 빌드.wasm",
+        loaderUrl: "Build/Unity_build.loader.js",
+        dataUrl: "Build/Unity_build.data",
+        frameworkUrl: "Build/Unity_build.framework.js",
+        codeUrl: "Build/Unity_build.wasm",
     });
 
     return (
         <Container>
             <Title>모니터링</Title>
             <UnityDiv>
-                <Unity unityProvider={unityProvider} style={{width:1050}} />
             </UnityDiv>
         </Container>
     );

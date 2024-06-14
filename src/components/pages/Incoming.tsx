@@ -3,6 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from "react-datepicker";
+import { se } from 'date-fns/locale';
 const Text = styled.p`
     font-size: 20px;
     margin-top: 0;
@@ -124,26 +125,14 @@ export function Incoming() {
         adjustMinutes(new Date())
     );
 
-        const clickIn = () => {
-            alert("입고되었습니다.")
-            getList()
-        }
-
-        const [products, setProducts] = useState([
-            {
-                name: '사과 - 상',
-                quantity: 250
-            },
-            {
-                name: '바나나 - 중',
-                quantity: 150
-            }
+    const [products, setProducts] = useState([
         ])
 
         const getList = async()=> {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products`)
             .then((res) => {
                 setProducts(res.data)
+                console.log(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -159,9 +148,9 @@ export function Incoming() {
         const [isIncomimg, setIsIncomimg] = useState(false)
         const input = (index) => {
             setIsIncomimg(true)
-            const isExist = inputs.findIndex((input) => input.name === products[index].name)
+            const isExist = inputs.findIndex((input) => input.id === products[index].id)
             if(isExist === -1){
-                setInputs([...inputs, {name: products[index].name, cnt: 1}])
+                setInputs([...inputs, {id:products[index].id, name: products[index].name, cnt: 1}])
             }
             else{
                 setInputs(inputs.map((input, i) => i === isExist ? {...input, cnt: input.cnt + 1} : input))
@@ -180,6 +169,72 @@ export function Incoming() {
     const deleteBtn = (i) => {
         setInputs(inputs.filter((input, index) => i !== index))
     }
+
+    const clickIn = () => {
+        if(inputs.length === 0){
+            alert("입고할 제품을 선택해주세요.")
+            return;
+        }
+        else {
+        setIncoming()
+        console.log(inputs)
+        alert("입고되었습니다.")
+        setInputs([])
+        getList()
+    }
+}
+
+    const validateData = (data) => {
+        return data.every(item => {
+            return item.product_id !== null && item.product_id !== undefined && !isNaN(item.product_id) &&
+                   item.variation !== null && item.variation !== undefined && !isNaN(item.variation);
+        });
+    };
+    
+    const setIncoming = async () => {
+        const data = inputs.map((input) => {
+            return {
+                'product_id': Number(input.id),
+                'variation': Number(input.cnt),
+            };
+        });
+    
+        // 데이터 로그 출력
+        console.log('Sending data:', data);
+    
+        // 데이터 유효성 검증
+        if (!validateData(data)) {
+            console.error("Data contains invalid values:", data);
+            return;
+        }
+    
+        if (data.some(item => item.product_id == null || item.variation == null)) {
+            console.error("Data contains null values:", data);
+            return;
+        }
+    
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/transactions/store`, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response);
+        } catch (err) {
+            if (err.response) {
+                // 서버가 200대가 아닌 상태 코드로 응답한 경우
+                console.log('Error response:', err.response.data);
+            } else if (err.request) {
+                // 요청이 만들어졌으나 응답을 받지 못한 경우
+                console.log('No response received:', err.request);
+            } else {
+                // 다른 오류가 발생한 경우
+                console.log('Error:', err.message);
+            }
+        }
+    };
+    
+    
 
     return (
             <> 
