@@ -32,6 +32,7 @@ export function Monitoring() {
         <Container>
             <Title>모니터링</Title>
             <UnityDiv>
+                <Unity unityProvider={unityProvider} style={{width:1050}} />
             </UnityDiv>
         </Container>
     );

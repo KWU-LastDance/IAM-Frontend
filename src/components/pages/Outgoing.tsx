@@ -126,12 +126,17 @@ export function Outgoing() {
     );
 
 const clickIn = () => {
-    setOutgoing()
-    console.log(inputs)
-            alert("출고되었습니다.")
-            setInputs([])
-            getList()
-            console.log(products)
+    if(inputs.length === 0){
+        alert("출고할 제품을 선택해주세요.")
+        return;
+    }
+    else {
+        setOutgoing()
+        console.log(inputs)
+        alert("입고되었습니다.")
+        setInputs([])
+        getList()
+    }
         }
 
         const setOutgoing = async () => {

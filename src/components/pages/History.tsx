@@ -54,7 +54,7 @@ const Text = styled.p`
     border: 1px solid #666666;
     margin: 15px;
     `;
-
+    
     const Body = styled.div`
     display: flex;
     flex-direction: row;
@@ -144,6 +144,11 @@ export function History() {
         getList()
     }, [])
 
+    
+    const [history, setHistory] = useState([
+    ]);
+
+    const [showList, setShowList] = useState([]);
 
       const adjustMinutes = (date: Date) => {
         const newDate = new Date(date);
@@ -170,16 +175,29 @@ export function History() {
             adjustMinutes(new Date())
         );
 
+        const toISOStringWithTwoDigitSeconds = (date) => {
+            return date.toISOString().slice(0, 19);
+        };
+
         const getListByDate = async () => {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/transactions`, {
                 params: {
-                    startDate: startDate.toISOString(),
-                    endDate: endDate.toISOString(),
+                    start: toISOStringWithTwoDigitSeconds(startDate),
+                    end: toISOStringWithTwoDigitSeconds(endDate)
                 }
             })
-            .then((res) => {
-                console.log(res.data)
-                setHistory(res.data)
+            .then((res) => {        
+                const transformedData = res.data.map(item => {
+                    const date = new Date(item.timestamp);
+                    date.setHours(date.getHours() + 9); // 9시간 더하기
+                    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+                       return {
+                        ...item,
+                        timestamp: formattedDate
+                    };
+                });
+                console.log(transformedData);
+                setHistory(transformedData);
             })
             .catch((err) => {
                 console.log(err)
@@ -190,24 +208,10 @@ export function History() {
             console.log(startDate, endDate)
             getListByDate()
         }, [startDate, endDate])
-
-
-        const [history, setHistory] = useState([
-            {
-                id: 1,
-                date: '2024-03-02 09:00',
-                type: 'store',
-                item: '사과 - 상',
-                amount: '200',
-            }
-        ]);
-
-        const [showList, setShowList] = useState([]);
         
         const getHistory = async (id) => {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/transactions/${id}`)
             .then((res) => {
-                console.log(res.data)
                 setShowList(res.data)
             })
             .catch((err) => {
@@ -254,6 +258,7 @@ export function History() {
 
 <Body>
                 <LeftDiv>
+                    {history.length === 0 && <p style={{fontSize:'17px', marginLeft:"30px"}}>해당 기간에 등록된 데이터가 없습니다.</p>}
                     <ListItems>
                         {history.map((item, index) => (
                             <ListItem key={index} onClick={()=>select(index)}>
