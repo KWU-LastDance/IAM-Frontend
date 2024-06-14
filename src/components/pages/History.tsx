@@ -172,7 +172,7 @@ export function History() {
             adjustDateAndMinutes(new Date(), 1)
         );
           const [endDate, setEndDate] = useState(
-            adjustMinutes(new Date())
+            new Date()
         );
 
         const toISOStringWithTwoDigitSeconds = (date) => {

@@ -125,7 +125,12 @@ export function Outgoing() {
         adjustMinutes(new Date())
     );
 
-const clickIn = () => {
+    const [products, setProducts] = useState([
+    ])
+
+    const [inputs, setInputs] = useState([])
+
+    const clickIn = () => {
     if(inputs.length === 0){
         alert("출고할 제품을 선택해주세요.")
         return;
@@ -133,19 +138,21 @@ const clickIn = () => {
     else {
         setOutgoing()
         console.log(inputs)
-        alert("입고되었습니다.")
+        alert("출고되었습니다.")
         setInputs([])
         getList()
     }
         }
 
         const setOutgoing = async () => {
-            const data = [
-                {
-                  "product_id": 7,
-                  "variation": 1
-                }
-              ];
+            const data = inputs.map((input) => {
+                return {
+                    'product_id': Number(input.id), 
+                    'variation': Number(input.cnt),
+                };
+            });
+            console.log(data);
+
             if (data.some(item => item.product_id == null || item.variation == null)) {
                 console.error("Data contains null values:", data);
                 return;
@@ -170,11 +177,7 @@ const clickIn = () => {
                 }
             }
         };
-        
-
-        const [products, setProducts] = useState([
-        ])
-
+    
         const getList = async()=> {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products`)
             .then((res) => {
@@ -188,34 +191,28 @@ const clickIn = () => {
             getList()
         }, [])
 
-
-        const [inputs, setInputs] = useState<any[]>([])
-
         const [isOutgoing, setIsOutgoing] = useState(false)
-        const input = (index : number) => {
+        const input = (index) => {
             setIsOutgoing(true)
             const isExist = inputs.findIndex((input) => input.id === products[index].id)
             if(isExist === -1){
-                setInputs([...inputs, {name: products[index].name, cnt: 1}])
+                setInputs([...inputs, {id:products[index].id, name: products[index].name, cnt: 1}])
             }
             else{
                 setInputs(inputs.map((input, i) => i === isExist ? {...input, cnt: input.cnt + 1} : input))
             }
         }
 
-        const onChange = (i : number) => {
+        const onChange = (i) => {
             if(event.target.value <= 0){
                 setInputs(inputs.map((input, index) => i === index ? {...input, cnt: 1} : input))
-            }
-            else if(event.target.value > products[i].quantity){
-                setInputs(inputs.map((input, index) => i === index ? {...input, cnt: products[i].quantity} : input))
             }
             else{
             setInputs(inputs.map((input, index) => i === index ? {...input, cnt: event.target.value} : input))
         }
     }
 
-    const deleteBtn = (i : number) => {
+    const deleteBtn = (i) => {
         setInputs(inputs.filter((input, index) => i !== index))
     }
 

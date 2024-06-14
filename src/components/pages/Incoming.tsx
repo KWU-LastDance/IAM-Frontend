@@ -194,7 +194,7 @@ export function Incoming() {
     const setIncoming = async () => {
         const data = inputs.map((input) => {
             return {
-                'product_id': Number(input.id),
+                'product_id': Number(input.id), 
                 'variation': Number(input.cnt),
             };
         });
