@@ -167,7 +167,10 @@ export function Outgoing() {
             } catch (err) {
                 if (err.response) {
                     // 서버가 200대가 아닌 상태 코드로 응답한 경우
-                    console.log('Error response:', err.response.data);
+                    console.log('Error response:', err.response.status);
+                    if(err.response.status === 500){
+                        alert("재고가 부족하여 출고가 불가능합니다.")
+                    }
                 } else if (err.request) {
                     // 요청이 만들어졌으나 응답을 받지 못한 경우
                     console.log('No response received:', err.request);
@@ -181,7 +184,9 @@ export function Outgoing() {
         const getList = async()=> {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products`)
             .then((res) => {
-                setProducts(res.data)
+                const sorted = res.data.sort((a,b)=>a.id - b.id)
+                setProducts(sorted)
+                console.log(sorted)
             })
             .catch((err) => {
                 console.log(err)
@@ -239,7 +244,7 @@ export function Outgoing() {
                     {products.map((product, index) => (
                         <Item key={index} onClick={()=>input(index)}>
                             <p>{product.name}</p>
-                            <p>{product.quantity}</p>
+                            <p>{product.stock}</p>
                         </Item>
                     ))}
                 </Items>

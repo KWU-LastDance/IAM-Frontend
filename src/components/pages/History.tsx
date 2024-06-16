@@ -134,6 +134,7 @@ export function History() {
     const getList = async()=> {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/transactions`)
         .then((res) => {
+            setHistory(res.data)
             console.log(res.data)
         })
         .catch((err) => {
@@ -178,26 +179,35 @@ export function History() {
         const toISOStringWithTwoDigitSeconds = (date) => {
             return date.toISOString().slice(0, 19);
         };
+        const formatDateTime = (date: Date) => {
+            const kstDate = new Date(date.getTime());
+
+            const options = { 
+                timeZone: 'Asia/Seoul', 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: false 
+            };
+            const formatter = new Intl.DateTimeFormat('en-CA', options);
+            const parts = formatter.formatToParts(kstDate);
+            const formattedDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}`;
+            return formattedDate;
+        };
+    
 
         const getListByDate = async () => {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/transactions`, {
                 params: {
-                    start: toISOStringWithTwoDigitSeconds(startDate),
-                    end: toISOStringWithTwoDigitSeconds(endDate)
+                    start: formatDateTime(startDate),
+                    end: formatDateTime(endDate)
                 }
             })
-            .then((res) => {        
-                const transformedData = res.data.map(item => {
-                    const date = new Date(item.timestamp);
-                    date.setHours(date.getHours() + 9); // 9시간 더하기
-                    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
-                       return {
-                        ...item,
-                        timestamp: formattedDate
-                    };
-                });
-                console.log(transformedData);
-                setHistory(transformedData);
+            .then((res) => {    
+                console.log(res.data)  
+                setHistory(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -205,7 +215,6 @@ export function History() {
         }
 
         useEffect(() => {
-            console.log(startDate, endDate)
             getListByDate()
         }, [startDate, endDate])
         
@@ -236,6 +245,22 @@ export function History() {
         
         const [isIn, setIsIn] = useState(false);
         const [isOut, setIsOut] = useState(false);
+
+        const formatTimestamp = (timestamp) => {
+            const date = new Date(timestamp);
+            const options = { 
+                timeZone: 'Asia/Seoul', 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: false 
+            };
+            const formatter = new Intl.DateTimeFormat('en-CA', options);
+            const parts = formatter.formatToParts(date);
+            return `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value} ${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}`;
+        };
     return (
         <Container>
                 <Title>히스토리</Title>
@@ -267,7 +292,7 @@ export function History() {
                                 :
                                     <p>출고</p>
                                 }
-                                <p>{item.timestamp}</p>
+                                <p>{formatTimestamp(item.timestamp)}</p>
                                 <br />
                                 <p>{item.quantity}품목</p>
                                 <p>{item.variation}</p>

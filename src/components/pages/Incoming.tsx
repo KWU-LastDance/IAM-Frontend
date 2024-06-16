@@ -131,8 +131,9 @@ export function Incoming() {
         const getList = async()=> {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products`)
             .then((res) => {
-                setProducts(res.data)
-                console.log(res.data)
+                const sorted = res.data.sort((a,b)=>a.id - b.id)
+                setProducts(sorted)
+                console.log(sorted)
             })
             .catch((err) => {
                 console.log(err)
@@ -257,7 +258,7 @@ export function Incoming() {
                     {products.map((product, index) => (
                         <Item key={index} onClick={()=>input(index)}>
                             <p>{product.name}</p>
-                            <p>{product.quantity}</p>
+                            <p>{product.stock}</p>
                         </Item>
                     ))}
 
