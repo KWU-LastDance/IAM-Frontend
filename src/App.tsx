@@ -5,6 +5,9 @@ import { History } from './components/pages/History'
 import {Monitoring} from './components/pages/Monitoring'
 import {Dashboard} from './components/pages/Dashboard'
 import { Sidebar } from './components/Sidebar'
+import { UnityProvider } from './components/UnityContext';
+import { UnityIframe } from './components/UnityIframe';
+import { UnityLoader } from './components/UnityLoader';
 
 const AppContent = () => {
   const location = useLocation();
@@ -12,6 +15,8 @@ const AppContent = () => {
 
   return (
     <>
+      <UnityProvider>
+      <UnityLoader />
       {!isHome && <Sidebar />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -20,6 +25,7 @@ const AppContent = () => {
         <Route path="/monitoring" element={<Monitoring />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
+      </UnityProvider>
     </>
   );
 };
