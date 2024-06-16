@@ -9,15 +9,11 @@ const Container = styled.div`
     font-size: 20px;
     margin-top: 20px;
     `;
-    const Title = styled.p`
-    font-size: 30px;
-    font-weight: 700;
-    `;
 
     const IframeContainer = styled.div`
     width: 97%;
-    height: 540px;
-    margin-top:10px;
+    height: 580px;
+    margin-top:40px;
 `;
 
 const StyledIframe = styled.iframe`
@@ -43,7 +39,6 @@ export function Dashboard() {
     */
     return (
         <Container>
-                <Title>대시보드</Title>
                 <IframeContainer>
                 <StyledIframe src="http://localhost:8501" />
             </IframeContainer>

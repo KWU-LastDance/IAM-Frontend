@@ -22,10 +22,10 @@ const UnityDiv = styled.div`
 
 export function Monitoring() {
     const { unityProvider} = useUnityContext({
-        loaderUrl: "Build/Unity_build.loader.js",
-        dataUrl: "Build/Unity_build.data",
-        frameworkUrl: "Build/Unity_build.framework.js",
-        codeUrl: "Build/Unity_build.wasm",
+        loaderUrl: "Build/Unity_build_2.loader.js",
+        dataUrl: "Build/Unity_build_2.data",
+        frameworkUrl: "Build/Unity_build_2.framework.js",
+        codeUrl: "Build/Unity_build_2.wasm",
     });
 
     return (
