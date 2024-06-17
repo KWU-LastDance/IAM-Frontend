@@ -65,8 +65,8 @@ const Text = styled.p`
     const LeftDiv = styled.div`
     display: flex;
     flex-direction: column;
-    width: 40%;
-    height: 400px;
+    width: 47%;
+    height: 410px;
     ::-webkit-scrollbar {
         width: 4px;
     }
@@ -79,7 +79,7 @@ const Text = styled.p`
     display: flex;
     flex-direction: column;
     margin-left: 20px;
-    width: 57%;
+    width: 48%;
     height: 400px;
     margin-top: -40px;
     `;
@@ -87,7 +87,7 @@ const Text = styled.p`
     const ListItems = styled.div`
     display: flex;
     flex-direction: column;
-    height: 400px;
+    height: 410px;
     overflow-y: auto;
     width: 90%;
     `;
@@ -96,8 +96,8 @@ const Text = styled.p`
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #D3D3D3;
-    padding: 0 30px;
-    margin: 5px 20px;
+    padding: 0 20px;
+    margin: 5px 15px;
     font-size: 17px;
     align-items: center;
     position: relative;
@@ -106,8 +106,32 @@ const Text = styled.p`
 
     const ListItem = styled(RightItem)`
     cursor: pointer;
-    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    margin: 6px 15px;
+    position: relative;
+    
     `;
+
+    const ListTopdiv = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    margin: 0px 20px;
+    font-size: 17px;
+    width: 100%;
+    height: 30px;
+    `;
+    const ListAuto = styled.div`
+    display: flex;
+    flex-direction: row;
+    padding: 0 10px;
+    margin: 0px;
+    margin-left: 360px;
+    `
 
     const Stock = styled.div`
     display: flex;
@@ -287,15 +311,23 @@ export function History() {
                     <ListItems>
                         {history.map((item, index) => (
                             <ListItem key={index} onClick={()=>select(index)}>
+                                <ListTopdiv>
                                 {item.type === 'store' ?
-                                    <p>입고</p>
+                                    <p style={{color:"blue"}}>입고</p>
                                 :
-                                    <p>출고</p>
+                                    <p style={{color:"red"}}>출고</p>
                                 }
                                 <p>{formatTimestamp(item.timestamp)}</p>
                                 <br />
                                 <p>{item.quantity}품목</p>
-                                <p>{item.variation}</p>
+                                <p>총 {item.variation}개</p>
+                                </ListTopdiv>
+                                <ListAuto>
+                                    {item.auto === true ?
+                                        <p>자동</p>
+                                    :
+                                        <p>수동</p>}
+                                </ListAuto>
                             </ListItem>
                         ))}
                     </ListItems>

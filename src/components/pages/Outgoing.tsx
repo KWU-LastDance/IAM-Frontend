@@ -130,17 +130,25 @@ export function Outgoing() {
 
     const [inputs, setInputs] = useState([])
 
+    const [isOut, setIsOut] = useState(true)
+
     const clickIn = () => {
     if(inputs.length === 0){
         alert("출고할 제품을 선택해주세요.")
         return;
     }
     else {
+        if(!isOut){
+            alert("재고가 부족하여 출고가 불가능합니다.")
+            return;
+        }
+        else{
         setOutgoing()
         console.log(inputs)
-        alert("출고되었습니다.")
+        //alert("출고되었습니다.")
         setInputs([])
         getList()
+        }
     }
         }
 
@@ -164,12 +172,13 @@ export function Outgoing() {
                     }
                 });
                 console.log(response);
+                alert("출고되었습니다.")
             } catch (err) {
                 if (err.response) {
                     // 서버가 200대가 아닌 상태 코드로 응답한 경우
                     console.log('Error response:', err.response.status);
                     if(err.response.status === 500){
-                        alert("재고가 부족하여 출고가 불가능합니다.")
+                       alert("재고가 부족하여 출고가 불가능합니다.")
                     }
                 } else if (err.request) {
                     // 요청이 만들어졌으나 응답을 받지 못한 경우
@@ -209,13 +218,16 @@ export function Outgoing() {
         }
 
         const onChange = (i) => {
-            if(event.target.value <= 0){
+            const max = products[i].stock
+            if(event.target.value < 0){
                 setInputs(inputs.map((input, index) => i === index ? {...input, cnt: 1} : input))
             }
             else{
             setInputs(inputs.map((input, index) => i === index ? {...input, cnt: event.target.value} : input))
         }
+    
     }
+    
 
     const deleteBtn = (i) => {
         setInputs(inputs.filter((input, index) => i !== index))

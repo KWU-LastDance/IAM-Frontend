@@ -159,7 +159,7 @@ export function Incoming() {
         }
 
         const onChange = (i) => {
-            if(event.target.value <= 0){
+            if(event.target.value < 0){
                 setInputs(inputs.map((input, index) => i === index ? {...input, cnt: 1} : input))
             }
             else{
@@ -177,11 +177,17 @@ export function Incoming() {
             return;
         }
         else {
+            if(inputs.some((input) => Number(input.cnt) === 0)){
+                alert("입고 수량을 입력해주세요.")
+                return;
+            }
+        else {
         setIncoming()
         console.log(inputs)
         alert("입고되었습니다.")
         setInputs([])
         getList()
+        }
     }
 }
 
