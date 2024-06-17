@@ -77,7 +77,7 @@ export function Home() {
         </Icon>
         <TextDiv>
       <Title>IAM</Title>
-      <SubTitle>intelligent Argricultural Manager</SubTitle>
+      <SubTitle>Intelligent Argricultural Manager</SubTitle>
         </TextDiv>
     </LogoDiv>
 
