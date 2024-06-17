@@ -14,7 +14,7 @@ const AppContent = () => {
   const isHome = location.pathname === '/';
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  /*
+  
   const { unityProvider, setUnityProvider } = useUnity();
 
   const { unityProvider: newUnityProvider } = useUnityContext({
@@ -38,7 +38,7 @@ const AppContent = () => {
       iframeRef.current.style.display = "none";
     }
   }, [location]);
-*/
+
   return (
     <>
     <iframe
@@ -52,7 +52,7 @@ const AppContent = () => {
         <Route path="/" element={<Home />} />
         <Route path="/in-and-out" element={<InAndOut />} />
         <Route path="/history" element={<History />} />
-        <Route path="/monitoring" element={<div style={{ border: 'none' }} />} />
+        <Route path="/monitoring" element={<div style={{ border: 'none', width:"100%", height:"100%" }} />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
 
