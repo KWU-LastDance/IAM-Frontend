@@ -323,7 +323,7 @@ export function History() {
                                 <p>총 {item.variation}개</p>
                                 </ListTopdiv>
                                 <ListAuto>
-                                    {item.auto === true ?
+                                    {item.automated === true ?
                                         <p>자동</p>
                                     :
                                         <p>수동</p>}
